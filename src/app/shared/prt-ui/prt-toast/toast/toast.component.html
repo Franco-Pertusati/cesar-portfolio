@@ -1,0 +1,21 @@
+@let t = toast();
+
+<div [class]="classes()">
+  <div class="flex items-center gap-1 text-xl">
+    @if (t.icon) {
+    <i class="material-symbols-rounded">
+      {{ t.icon }}
+    </i>
+    }
+    <span class="font-bold">
+      {{ t.title }}
+    </span>
+  </div>
+  @if (t.message) {
+  <div>
+    <span>
+      {{ t.message }}
+    </span>
+  </div>
+  }
+</div>

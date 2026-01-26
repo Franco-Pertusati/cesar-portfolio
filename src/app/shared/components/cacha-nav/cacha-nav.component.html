@@ -1,0 +1,69 @@
+<div class="relative">
+  <nav class="flex items-center justify-between p-2">
+    <span class="text-xl font-bold">Cacha</span>
+
+    <ul class="hidden md:flex gap-6 items-center">
+      <li>
+        <a href="#" class="hover:text-blue-600 transition-colors">Inicio</a>
+      </li>
+      <li>
+        <a href="#" class="hover:text-blue-600 transition-colors">Mi Trabajo</a>
+      </li>
+      <li>
+        <button (click)="openContact()">Contacto</button>
+      </li>
+      <li>
+        <app-theme-toggle-btn variant="ghost" />
+      </li>
+    </ul>
+
+    <div class="md:hidden">
+      <prt-button icon="menu" variant="ghost" (click)="toggleMenu()" />
+    </div>
+  </nav>
+
+  <div
+    *ngIf="isMenuOpen"
+    class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+    (click)="closeMenu()"
+  ></div>
+
+  <div
+    class="fixed top-0 right-0 h-full w-64 bg-dark transform transition-transform duration-300 ease-in-out z-50 md:hidden"
+    [class.translate-x-0]="isMenuOpen"
+    [class.translate-x-full]="!isMenuOpen"
+  >
+    <div class="p-4">
+      <div class="flex justify-end mb-8">
+        <prt-button (btnClick)="closeMenu()" icon="close" variant="ghost" />
+      </div>
+
+      <ul class="flex flex-col gap-4">
+        <li>
+          <a
+            href="#"
+            (click)="closeMenu()"
+            class="block py-2 px-4 hover:bg-gray-100 rounded transition-colors"
+          >
+            Inicio
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            (click)="closeMenu()"
+            class="block py-2 px-4 hover:bg-gray-100 rounded transition-colors"
+          >
+            Mi Trabajo
+          </a>
+        </li>
+        <li>
+          <button class="block py-2 px-4 hover:bg-gray-100 rounded transition-colors" (click)="openContact()">Contacto</button>
+        </li>
+        <li class="px-2">
+          <app-theme-toggle-btn variant="ghost" />
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="fixed inset-0 z-40 grid place-items-center bg-light/50 backdrop-blur" (click)="closeDialog()">
+  <div class="relative w-fit md:w-auto md:min-w-106 bg-dark border border-x-border border-t-highline border-b-bottomline rounded-2xl" (click)="stopPropagation($event)">
+    <ng-content />
+    <div class="absolute -top-10 right-0 bg-dark rounded-xl">
+      <prt-button #closeButton [icon]="'close'" variant="outlined" (click)="closeDialog()" />
+    </div>
+  </div>
+</div>

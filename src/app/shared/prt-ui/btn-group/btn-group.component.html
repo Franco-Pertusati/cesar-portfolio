@@ -1,0 +1,10 @@
+<div class="border border-border rounded-xl w-fit">
+  @for (b of buttons(); track $index) {
+  <prt-button
+    [label]="b.label ? b.label : ''"
+    [icon]="b.icon ? b.icon : ''"
+    variant="ghost"
+    (btnClick)="navigateTo(b.route)"
+  />
+  }
+</div>

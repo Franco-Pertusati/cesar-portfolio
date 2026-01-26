@@ -1,0 +1,46 @@
+@if (isActive()) {
+<div
+  class="fixed z-50 top-0 left-0 w-screen h-screen gap-2 flex flex-col items-center sm:pb-2 pb-14"
+>
+  <div
+    class="bg-black/40 backdrop-blur-lg absolute top-0 left-0 w-full h-full"
+    (click)="closeCarrousel()"
+  ></div>
+  <div class="fixed top-2 right-2 flex flex-col gap-1 z-10">
+    <prt-button variant="default" icon="close" (btnClick)="closeCarrousel()" />
+    <app-theme-toggle-btn variant="default" />
+  </div>
+  <div class="my-auto max-w-7xl grid place-items-center relative">
+    <img [src]="selectedImg" alt="" class="w-full" />
+  </div>
+  <div class="flex gap-2 z-20">
+    <prt-button
+      icon="chevron_left"
+      [variant]="'default'"
+      (click)="navigatePrev()"
+    />
+    <prt-button
+      icon="chevron_right"
+      [variant]="'default'"
+      (click)="navigateNext()"
+    />
+  </div>
+  <div
+    class="p-4 w-full flex overflow-x-auto scroll-smooth"
+    style="padding: 1rem 40%; scrollbar-width: none"
+  >
+    @for (img of images(); track $index) {
+    <img
+      #imgElement
+      [src]="img"
+      alt=""
+      class="w-24 shrink-0 cursor-pointer transition-all"
+      (click)="selectImg(img, $event)"
+      [ngClass]="
+        img === selectedImg ? 'rounded-lg scale-120 z-20' : 'opacity-60'
+      "
+    />
+    }
+  </div>
+</div>
+}

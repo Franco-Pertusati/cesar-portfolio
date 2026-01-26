@@ -1,0 +1,18 @@
+<div class="flex flex-col">
+  <div class="border border-border rounded-2xl prt-button-group flex items-center p-1">
+    @for (tab of tabs(); track $index; let i = $index) {
+      @if (i > 0) {
+        <i class="material-symbols-rounded rotate-90 text-border">horizontal_rule</i>
+      }
+      <prt-button 
+        [label]="tab.label" 
+        [variant]="selectedIndex() === i ? 'default' : 'ghost'"
+        (click)="selectTab(i)"
+      />
+    }
+  </div>
+  
+  <div class="border border-border rounded-2xl p-4 mt-2">
+    <ng-container *ngComponentOutlet="tabs()[selectedIndex()].component" />
+  </div>
+</div>

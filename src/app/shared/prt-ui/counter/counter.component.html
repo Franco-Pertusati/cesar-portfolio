@@ -1,0 +1,5 @@
+<div class="flex gap-2 items-center">
+    <prt-button icon="remove" [variant]="'secondary'" (btnClick)="decrement()" />
+    <span class="w-4 text-center">{{ currentValue }}</span>
+    <prt-button icon="add" [variant]="'secondary'" (btnClick)="increment()" />
+</div>

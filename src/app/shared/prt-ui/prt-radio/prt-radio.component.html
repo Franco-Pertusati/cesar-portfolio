@@ -1,0 +1,27 @@
+<div [class]="containerClasses()">
+  @for (option of options(); track option.value) {
+    <label [class]="getOptionClasses(option)">
+      <input
+        type="radio"
+        [name]="'radio-group'"
+        [value]="option.value"
+        [checked]="selectedValue() === option.value"
+        [disabled]="option.disabled"
+        (change)="onSelect(option)"
+        class="sr-only"
+      />
+
+      @if (showIcon() && getDisplayIcon(option)) {
+        <div [class]="getIconClasses()">
+          <i class="material-symbols-rounded">{{ getDisplayIcon(option) }}</i>
+        </div>
+      }
+
+      @if (showLabel() && option.label) {
+        <span [class]="getLabelClasses(option)">
+          {{ getDisplayLabel(option) }}
+        </span>
+      }
+    </label>
+  }
+</div>

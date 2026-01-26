@@ -1,0 +1,32 @@
+@let config = { label: label(), labelChecked: labelChecked(), icon: icon(),
+iconChecked: iconChecked(), iconUnchecked: iconUnchecked(), showIcon:
+showIcon(), showLabel: showLabel(), checked: checked(), disabled: disabled() };
+
+<label [class]="containerClasses()">
+  <input
+    type="checkbox"
+    [checked]="config.checked"
+    [disabled]="config.disabled"
+    (change)="onToggle()"
+    class="sr-only"
+  />
+
+  @if (config.showIcon && (config.icon || config.iconChecked ||
+  config.iconUnchecked)) {
+  <div [class]="checkboxClasses()">
+    @if (config.checked && config.iconChecked) {
+    <i class="material-symbols-rounded">{{ config.iconChecked }}</i>
+    } @else if (!config.checked && config.iconUnchecked) {
+    <i class="material-symbols-rounded">{{ config.iconUnchecked }}</i>
+    } @else if (config.icon) {
+    <i class="material-symbols-rounded">{{ config.icon }}</i>
+    }
+  </div>
+  } @if (config.showLabel && (config.label || config.labelChecked)) {
+  <span [class]="labelClasses()">
+    {{
+      config.checked && config.labelChecked ? config.labelChecked : config.label
+    }}
+  </span>
+  }
+</label>

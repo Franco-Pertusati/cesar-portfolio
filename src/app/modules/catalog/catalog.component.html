@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-2 w-screen p-2 fixed top-0 left-0 h-screen pt-14 pb-16">
+  <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3 grow">
+    <h2 class="text-xl">Elije el diseño</h2>
+    <div class="bg-light grow rounded-xl grid place-items-center">
+      <div class="flex gap-3 flex-col items-center">
+        <span class="text-muted px-2 text-center">
+          Selecciona un diseño para hacer el encargo
+        </span>
+        <prt-button label="Elegir diseño" />
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <prt-button variant="secondary" label="Cambiar diseño" />
+    </div>
+  </div>
+  <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3">
+    <div>
+      <h2 class="text-xl">Tamaño de maceta</h2>
+      <span class="text-muted">Radio de la base</span>
+    </div>
+    <div class="flex gap-2">
+      <prt-radio [options]="macetaOptions" />
+    </div>
+  </div>
+  <button
+    class="rounded-xl text-xl flex p-4 px-8 items-center bg-text text-dark"
+  >
+    <span class="grow">Encargar por WhatsApp</span>
+    <i class="material-symbols-rounded text-xl">arrow_forward</i>
+  </button>
+</div>
