@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
-import { DialogService } from '../../../core/services/dialog.service';
 import { PrtButton } from "../../prt-button/prt-button.component";
+import { DialogService } from '../../../../core/services/dialog.service';
 
 @Component({
   selector: 'app-dialog',

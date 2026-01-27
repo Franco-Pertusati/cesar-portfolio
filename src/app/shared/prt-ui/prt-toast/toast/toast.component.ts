@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { Toast } from '../../../core/interfaces/toast';
+import { Toast } from '../../../../core/interfaces/toast';
 
 @Component({
   selector: 'app-toast',
