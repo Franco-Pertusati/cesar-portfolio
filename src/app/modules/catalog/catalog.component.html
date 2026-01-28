@@ -1,9 +1,9 @@
 <div
-  class="flex flex-col gap-2 w-screen p-2 fixed top-0 left-0 h-screen pt-14 pb-16"
+  class="flex flex-col gap-4 w-screen p-2 fixed top-0 left-0 h-screen pt-14 pb-16"
 >
-  <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3 grow">
+  <section class="grow flex flex-col">
     <h2 class="text-xl">Elije el diseño</h2>
-    <div class="bg-light grow rounded-xl grid place-items-center">
+    <div class="bg-neutral grow rounded-2xl grid place-items-center">
       <div class="flex gap-3 flex-col items-center">
         @if (selectedDesing()) {
           <span class="text-text px-2 text-center font-medium">
@@ -26,39 +26,38 @@
         />
       </div>
     }
-  </div>
+  </section>
 
-  <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3">
-    <div>
-      <h2 class="text-xl">Tamaño de maceta</h2>
-      <span class="text-muted">Radio de la base</span>
-    </div>
-    <div class="flex gap-2">
-      <prt-radio
-        [options]="macetaOptions"
-        [(selectedValue)]="selectedPotflower"
-        (selectionChange)="onPotflowerChange($event)"
-      />
-    </div>
-    @if (selectedPotflower()) {
-      <div class="text-sm text-muted">
-        <i class="material-symbols-rounded text-base align-middle"
-          >check_circle</i
-        >
-        Tamaño seleccionado: {{ selectedPotflower() }}cm
+  <section class="flex flex-col gap-1">
+    <h2 class="text-xl">Tamaño de maceta</h2>
+    <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3">
+      <div>
+        <span class="text-muted">Radio de la base</span>
       </div>
-    }
-  </div>
+      <div class="flex gap-2">
+        <prt-radio
+          [options]="macetaOptions"
+          [(selectedValue)]="selectedPotflower"
+          (selectionChange)="onPotflowerChange($event)"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="flex flex-col gap-1">
+    <h2 class="text-xl">Tu nombre</h2>
+    <input
+      type="text"
+      class="p-4 focus:outline-none bg-neutral rounded-xl w-full"
+      placeholder="Marta Gomez"
+      (input)="handleClientName($event)"
+    />
+  </section>
 
   <button
-    class="rounded-xl text-xl flex p-4 px-8 items-center transition-opacity"
-    [class.bg-text]="canCreateOrder()"
-    [class.text-dark]="canCreateOrder()"
-    [class.bg-border]="!canCreateOrder()"
-    [class.text-muted]="!canCreateOrder()"
-    [class.opacity-50]="!canCreateOrder()"
-    [class.cursor-not-allowed]="!canCreateOrder()"
-    [disabled]="!canCreateOrder()"
+    class="rounded-xl text-xl flex p-4 px-8 items-center"
+    [ngClass]="isValidOrder() ? `bg-text text-dark` : `bg-neutral text-muted`"
+    [disabled]="!isValidOrder()"
     (click)="createOrder()"
   >
     <span class="grow">Encargar por WhatsApp</span>
