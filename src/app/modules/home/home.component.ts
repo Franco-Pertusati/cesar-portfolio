@@ -5,6 +5,7 @@ import { CarrouselComponent } from '../../shared/components/carrousel/carrousel.
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { DialogService } from '../../core/services/dialog.service';
 import { ContactDialogComponent } from '../../shared/components/contact-dialog/contact-dialog.component';
+import { SupabaseService } from '../../core/services/supabase.service';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { ContactDialogComponent } from '../../shared/components/contact-dialog/c
 })
 export class HomeComponent {
   dialog = inject(DialogService)
+  sbService = inject(SupabaseService)
   images = [
     "https://picsum.photos/seed/1/800/600",
     "https://picsum.photos/seed/2/800/600",
@@ -32,6 +34,11 @@ export class HomeComponent {
   ]
   carouselActive = false;
   selectedImageIndex = 0;
+
+  async ngOnInit() {
+    const m = await this.sbService.getAllArtworks()
+    console.log(m)
+  }
 
   openContactDialog() {
     this.dialog.openDialog(ContactDialogComponent)
