@@ -70,41 +70,70 @@ export class SupabaseService {
     return data.user;
   }
 
-  async createArtwork(
+async createArtwork(
   file: File,
   fechaCreacion: string,
   favorite: boolean,
   flowerpotDesing: boolean
 ) {
-  // 1. Generar nombre único para la imagen
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-  const filePath = `${fileName}`;
+  try {
+    // Verificar sesión
+    const { data: { session }, error: sessionError } = await this.supabase.auth.getSession();
+    console.log('Sesión activa:', session);
+    console.log('Error de sesión:', sessionError);
+    
+    if (!session) {
+      throw new Error('No hay sesión activa');
+    }
 
-  // 2. Subir imagen al bucket
-  const { error: uploadError } = await this.supabase.storage
-    .from('Fotos obras')
-    .upload(filePath, file);
+    // 1. Generar nombre único para la imagen
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+    
+    console.log('Subiendo archivo:', filePath);
 
-  if (uploadError) throw uploadError;
+    // 2. Subir imagen al bucket
+    const { error: uploadError } = await this.supabase.storage
+      .from('Fotos obras')
+      .upload(filePath, file);
 
-  // 3. Obtener URL pública de la imagen
-  const { data: urlData } = this.supabase.storage
-    .from('Fotos obras')
-    .getPublicUrl(filePath);
+    if (uploadError) {
+      console.error('Error al subir:', uploadError);
+      throw uploadError;
+    }
 
-  // 4. Insertar registro en la tabla obras
-  const { data, error } = await this.supabase
-    .from('obras')
-    .insert({
+    // 3. Obtener URL pública de la imagen
+    const { data: urlData } = this.supabase.storage
+      .from('Fotos obras')
+      .getPublicUrl(filePath);
+    
+    console.log('URL generada:', urlData.publicUrl);
+
+    // 4. Insertar registro
+    const insertData = {
       fecha_creacion: fechaCreacion,
       favorite: favorite,
       flowerpot_desing: flowerpotDesing,
       image_url: urlData.publicUrl
-    })
-    .select();
+    };
+    
+    console.log('Datos a insertar:', insertData);
 
-  if (error) throw error;
-  return data;
+    const { data, error } = await this.supabase
+      .from('obras')
+      .insert(insertData)
+      .select();
+
+    console.log('Resultado insert:', data);
+    console.log('Error insert:', error);
+
+    if (error) throw error;
+    return data;
+    
+  } catch (error) {
+    console.error('Error completo:', error);
+    throw error;
+  }
 }
 }
