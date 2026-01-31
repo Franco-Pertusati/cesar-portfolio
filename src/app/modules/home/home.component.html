@@ -1,75 +1,61 @@
-<div class="p-2 relative">
-  <section>
-    <header class="flex flex-col gap-3 py-24 bg-neutral rounded-2xl">
-      <div class="flex gap-2 items-center mx-auto w-full max-w-72">
-        <img
-          class="h-18 rounded-full"
-          src="https://i.pinimg.com/736x/39/a6/f0/39a6f0fe8b9614845bc991adad7717ad.jpg"
-          alt=""
-        />
-        <div class="grow flex flex-col">
-          <h1 class="text-2xl">Cesar Apellido</h1>
-          <span class="text-muted">Artista plastico</span>
+<div class="p-2">
+  <div class="flex flex-col">
+    <section class="grow bg-neutral rounded-2xl md:px-4 px-2">
+      <header class="flex flex-col gap-3 py-24 px-2">
+        <div class="flex gap-2 items-center">
+          <img
+            class="h-18 rounded-full"
+            src="https://i.pinimg.com/736x/39/a6/f0/39a6f0fe8b9614845bc991adad7717ad.jpg"
+            alt=""
+          />
+          <div class="grow flex flex-col">
+            <h1 class="text-2xl">Cesar Apellido</h1>
+            <span class="text-muted">Artista plastico</span>
+          </div>
         </div>
-      </div>
-      <span class="max-w-72 mx-auto">
-        Me dedico a hacer arte para hacer pensar a la gente. Si estas interesado
-        en comprar mi arte te invito a mirar mi catalogo.
-      </span>
-      <div class="flex gap-2 justify-center">
-        <a href="/catalogo" class="flex gap-2"></a>
-      </div>
-    </header>
-  </section>
+        <span class="">
+          <!-- Me dedico a hacer arte para hacer pensar a la gente. Si estas
+          interesado en comprar mi arte te invito a mirar mi
+          <a href="/catalogo" class="font-semibold hover:underline">catalogo</a> -->
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sint dolor labore in quae quod iusto? Exercitationem maxime, rem illo in quae sed consequatur quasi, praesentium assumenda id corrupti modi vitae?
+        </span>
+        <div class="flex gap-2 justify-center">
+          <a href="/catalogo" class="flex gap-2"></a>
+        </div>
+      </header>
+    </section>
 
-  <section>
-    <div
-      class="relative my-2 flex flex-col-reverse rounded-2xl h-96 overflow-hidden bg-[url(https://i.pinimg.com/736x/b4/34/c6/b434c63a8b21b781859cc3c371db42b3.jpg)] bg-no-repeat bg-cover bg-top"
-    >
-      <div class="px-4 pb-4 pt-16 relative">
-        <div
-          class="absolute h-full w-full top-0 left-0 z-10 bg-neutral/50"
-          style="
-            mask-image: linear-gradient(0, #000 70%, #0000);
-            backdrop-filter: blur(5px);
-          "
-        ></div>
-        <div class="relative z-10">
-          <h3 class="font-bold text-xl">Catalogo de macetas</h3>
-          <span>Elige el diseño las medidas y encargamelo.</span>
-        </div>
-      </div>
+    <section>
       <div
-        class="h-12 w-12 absolute top-1 right-1 bg-neutral rounded-xl grid place-items-center"
+        class="relative my-2 flex flex-col-reverse rounded-2xl h-96 overflow-hidden bg-[url(https://i.pinimg.com/736x/b4/34/c6/b434c63a8b21b781859cc3c371db42b3.jpg)] bg-no-repeat bg-cover bg-top"
       >
-        <i class="material-symbols-rounded">open_in_new</i>
+        <div class="px-4 pb-4 pt-16 relative">
+          <div
+            class="absolute h-full w-full top-0 left-0 z-10 bg-neutral/50"
+            style="
+              mask-image: linear-gradient(0, #000 70%, #0000);
+              backdrop-filter: blur(5px);
+            "
+          ></div>
+          <div class="relative z-10">
+            <h3 class="font-bold text-xl">Catalogo de macetas</h3>
+            <span>Elige el diseño las medidas y encargamelo.</span>
+          </div>
+        </div>
+        <div
+          class="h-12 w-12 absolute top-1 right-1 bg-neutral rounded-xl grid place-items-center"
+        >
+          <i class="material-symbols-rounded">open_in_new</i>
+        </div>
+        <a
+          href="/catalogo"
+          class="absolute top-0 left-0 w-full h-full z-20"
+        ></a>
       </div>
-      <a href="/catalogo" class="absolute top-0 left-0 w-full h-full z-20"></a>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section>
-    <h2 class="text-2xl text-center mt-8 mb-4">Mis obras favoritas</h2>
-
-    <div
-      class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 pb-12 md:pb-2"
-    >
-      @for (img of images; track $index) {
-        <img
-          [src]="img"
-          alt=""
-          class="rounded-xl cursor-pointer"
-          (click)="openCarousel($index)"
-        />
-      }
-      <div class="col-span-full">
-        <app-footer />
-      </div>
-      <app-carrousel
-        [images]="images"
-        [(isActive)]="carouselActive"
-        [initialIndex]="selectedImageIndex"
-      />
-    </div>
-  </section>
+  <div class="flex flex-col gap-4">
+    <app-galery [artworks]="sbService.allArtworks()" />
+  </div>
 </div>

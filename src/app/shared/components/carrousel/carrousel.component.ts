@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, input, effect, ElementRef, viewChildren, model } from '@angular/core';
 import { PrtButton } from '../../prt-ui/prt-button/prt-button.component';
 import { ThemeToggleBtnComponent } from '../../prt-ui/theme-toggle-btn/theme-toggle-btn.component';
+import { Artwork } from '../../../core/services/supabase.service';
 
 @Component({
   selector: 'app-carrousel',
@@ -9,19 +10,19 @@ import { ThemeToggleBtnComponent } from '../../prt-ui/theme-toggle-btn/theme-tog
   templateUrl: './carrousel.component.html'
 })
 export class CarrouselComponent {
-  images = input<string[]>([]);
-  selectedImg: string = '';
+  images = input<Artwork[]>([]);
+  selectedArtwork: Artwork | null = null;
   imageElements = viewChildren<ElementRef>('imgElement');
   isActive = model<boolean>(false);
   initialIndex = input<number>(0);
   
   constructor() {
     effect(() => {
-      const imgs = this.images();
+      const artworks = this.images();
       const index = this.initialIndex();
       
-      if (imgs && imgs.length > 0) {
-        this.selectedImg = imgs[index] || imgs[0];
+      if (artworks && artworks.length > 0) {
+        this.selectedArtwork = artworks[index] || artworks[0];
         
         setTimeout(() => {
           this.scrollToImage(index);
@@ -30,8 +31,8 @@ export class CarrouselComponent {
     });
   }
   
-  selectImg(img: string, event: MouseEvent) {
-    this.selectedImg = img;
+  selectImg(artwork: Artwork, event: MouseEvent) {
+    this.selectedArtwork = artwork;
     const clickedElement = event.currentTarget as HTMLElement;
     clickedElement.scrollIntoView({
       behavior: 'smooth',
@@ -41,21 +42,21 @@ export class CarrouselComponent {
   }
   
   navigatePrev() {
-    const imgs = this.images();
-    const currentIndex = imgs.indexOf(this.selectedImg);
+    const artworks = this.images();
+    const currentIndex = artworks.findIndex(a => a === this.selectedArtwork);
+    
     if (currentIndex > 0) {
-      const prevImg = imgs[currentIndex - 1];
-      this.selectedImg = prevImg;
+      this.selectedArtwork = artworks[currentIndex - 1];
       this.scrollToImage(currentIndex - 1);
     }
   }
   
   navigateNext() {
-    const imgs = this.images();
-    const currentIndex = imgs.indexOf(this.selectedImg);
-    if (currentIndex < imgs.length - 1) {
-      const nextImg = imgs[currentIndex + 1];
-      this.selectedImg = nextImg;
+    const artworks = this.images();
+    const currentIndex = artworks.findIndex(a => a === this.selectedArtwork);
+    
+    if (currentIndex < artworks.length - 1) {
+      this.selectedArtwork = artworks[currentIndex + 1];
       this.scrollToImage(currentIndex + 1);
     }
   }

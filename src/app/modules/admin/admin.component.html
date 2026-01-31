@@ -1,116 +1,188 @@
 <div class="min-h-screen py-12 px-6">
-  <div class="max-w-2xl mx-auto">
+  <div class="max-w-3xl mx-auto">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-12 flex-wrap">
+    <div class="flex justify-between items-center mb-12 flex-wrap gap-4">
       <div>
-        <h1 class="text-4xl font-light tracking-tight mb-2">
+        <h1 class="text-4xl font-light tracking-tight">
           Panel de Administración
         </h1>
       </div>
       <button
         (click)="logout()"
-        class="px-6 py-2 border border-neutral hover:bg-neutral hover: transition-colors"
+        class="px-6 py-2 border border-border hover:bg-neutral hover:text-white transition-colors text-sm tracking-wide"
       >
         Cerrar sesión
       </button>
     </div>
 
-    <!-- Success message -->
+    <!-- Mensajes -->
     @if (successMessage) {
-      <div class="mb-6 p-4 bg-green-50">
-        <p class="text-green-800 text-sm">{{ successMessage }}</p>
+      <div class="mb-6 p-4 border border-border">
+        <p class="text-sm">{{ successMessage }}</p>
       </div>
     }
-
     @if (errorMessage) {
-      <div class="mb-6 p-4 bg-red-50">
-        <p class="text-red-800 text-sm">{{ errorMessage }}</p>
+      <div class="mb-6 p-4 border border-border">
+        <p class="text-sm">{{ errorMessage }}</p>
       </div>
     }
 
-    <div class="bg-dark p-8">
-      <h2 class="text-2xl font-light mb-8">Nueva Obra</h2>
+    <!-- Drop Zone -->
+    <div
+      class="border-2 border-dashed border-border rounded transition-colors duration-200 cursor-pointer"
+      [class.bg-neutral]="isDragging"
+      [class.text-white]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+    >
+      <div class="w-full grid place-items-center pt-16">
+        <i class="material-symbols-rounded" style="font-size: 56px;">upload</i>
+      </div>
+      <div class="py-16 px-6 text-center">
+        <p class="text-lg font-light mb-1">
+          {{
+            isDragging
+              ? "Suelta las imágenes aquí"
+              : "Arrastra y suelta imágenes aquí"
+          }}
+        </p>
+        <p class="text-sm text-muted">o haz clic para seleccionar archivos</p>
+      </div>
+      <input
+        #fileInput
+        type="file"
+        multiple
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        class="hidden"
+      />
+    </div>
 
-      <form (ngSubmit)="onSubmit()" class="space-y-6">
-        <div>
-          <label
-            for="fecha"
-            class="block text-sm font-medium text-neutral-700 mb-2"
-          >
-            Fecha de creación
-          </label>
-          <input
-            type="date"
-            id="fecha"
-            [(ngModel)]="formData.fecha_creacion"
-            name="fecha_creacion"
-            required
-            class="w-full px-4 py-3 bg-dark border border-border focus:outline-none focus:border-neutral-900 transition-colors"
-          />
+    <!-- Cola de artworks -->
+    @if (artworkQueue.length > 0) {
+      <div class="mt-8">
+        <!-- Barra de acciones globales -->
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-light">
+            {{ artworkQueue.length }} imagen{{
+              artworkQueue.length > 1 ? "es" : ""
+            }}
+            pendientes
+          </h2>
+          <div class="flex gap-3">
+            <button
+              (click)="clearQueue()"
+              class="px-4 py-1.5 text-sm border border-border"
+            >
+              Limpiar todo
+            </button>
+            <button
+              (click)="uploadAll()"
+              [disabled]="isUploadingAll"
+              class="px-4 py-1.5 text-sm bg-text text-dark disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-80 transition-opacity"
+            >
+              {{ isUploadingAll ? "Subiendo..." : "Subir todas" }}
+            </button>
+          </div>
         </div>
 
-        <div>
-          <label
-            for="image"
-            class="block text-sm font-medium text-neutral-700 mb-2"
-          >
-            Imagen de la obra
-          </label>
-          <input
-            type="file"
-            id="image"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-            required
-            class="w-full px-4 py-3 bg-dark border border-border focus:outline-none focus:border-neutral transition-colors file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-neutral-900 file: file:cursor-pointer hover:file:bg-neutral-800"
-          />
-          @if (selectedFile) {
-            <p class="text-sm text-neutral-500 mt-2">
-              Archivo seleccionado: {{ selectedFile.name }}
-            </p>
+        <!-- Lista de items -->
+        <div class="flex flex-col gap-4">
+          @for (item of artworkQueue; track $index) {
+            <div class="border border-border p-4">
+              <!-- Si está subido, mostrar estado y permitir eliminarlo -->
+              @if (item.uploaded) {
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <img [src]="item.preview" class="w-16 h-16 object-cover" />
+                    <span class="text-sm">Subida exitosamente</span>
+                  </div>
+                  <button
+                    (click)="removeItem($index)"
+                    class="text-sm opacity-50 hover:opacity-100"
+                  >
+                    ✕
+                  </button>
+                </div>
+              }
+
+              <!-- Si no está subido, mostrar formulario de configuración -->
+              @else {
+                <div class="flex gap-4">
+                  <!-- Preview imagen -->
+                  <div class="relative shrink-0">
+                    <img [src]="item.preview" class="w-28 h-28 object-cover" />
+                    <button
+                      (click)="removeItem($index)"
+                      class="absolute top-1 right-1 w-6 h-6 bg-neutral flex items-center justify-center text-xs hover:opacity-70"
+                    >
+                      <i class="material-symbols-rounded">close</i>
+                    </button>
+                  </div>
+
+                  <!-- Configuración individual -->
+                  <div class="flex-1 flex flex-col gap-3 justify-between">
+                    <!-- Fecha -->
+                    <div>
+                      <label class="block text-xs mb-1 opacity-60"
+                        >Fecha de creación</label
+                      >
+                      <input
+                        type="date"
+                        [(ngModel)]="item.fecha_creacion"
+                        [name]="'fecha_' + $index"
+                        class="w-full px-3 py-1.5 text-sm border border-border focus:outline-none"
+                      />
+                    </div>
+
+                    <!-- Checkboxes + Botón subir en una fila -->
+                    <div
+                      class="flex items-center justify-between flex-wrap gap-3"
+                    >
+                      <div class="flex items-center gap-5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="item.favorite"
+                            [name]="'fav_' + $index"
+                            class="w-4 h-4"
+                          />
+                          <span class="text-sm">Favorita</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="item.flowerpot_desing"
+                            [name]="'flow_' + $index"
+                            class="w-4 h-4"
+                          />
+                          <span class="text-sm">Maceta</span>
+                        </label>
+                      </div>
+
+                      <!-- Botón subir individual -->
+                      <button
+                        (click)="uploadSingle($index)"
+                        [disabled]="item.isLoading || isUploadingAll"
+                        class="px-4 py-1.5 text-sm bg-neutral disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-80 transition-opacity"
+                      >
+                        {{ item.isLoading ? "Subiendo..." : "Subir" }}
+                      </button>
+                    </div>
+
+                    <!-- Error individual -->
+                    @if (item.error) {
+                      <p class="text-xs opacity-60">{{ item.error }}</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
           }
         </div>
-
-        <div class="flex items-center">
-          <input
-            type="checkbox"
-            id="favorite"
-            [(ngModel)]="formData.favorite"
-            name="favorite"
-            class="w-5 h-5 border-border text-neutral-900 focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="favorite"
-            class="ml-3 text-sm font-medium text-neutral-700"
-          >
-            Marcar como favorita
-          </label>
-        </div>
-
-        <div class="flex items-center">
-          <input
-            type="checkbox"
-            id="flowerpot"
-            [(ngModel)]="formData.flowerpot_desing"
-            name="flowerpot_desing"
-            class="w-5 h-5 border-border text-neutral-900 focus:ring-0 focus:ring-offset-0"
-          />
-          <label
-            for="flowerpot"
-            class="ml-3 text-sm font-medium text-neutral-700"
-          >
-            Es diseño de maceta
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="isLoading"
-          class="w-full py-4 bg-text text-dark font-medium tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ isLoading ? "Subiendo obra..." : "Crear Obra" }}
-        </button>
-      </form>
-    </div>
+      </div>
+    }
   </div>
 </div>

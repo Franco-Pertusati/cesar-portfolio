@@ -11,7 +11,7 @@
     <app-theme-toggle-btn variant="default" />
   </div>
   <div class="my-auto max-w-7xl grid place-items-center relative">
-    <img [src]="selectedImg" alt="" class="w-full" />
+    <img [src]="selectedArtwork?.image_url" alt="" class="w-full" />
   </div>
   <div class="flex gap-2 z-20">
     <prt-button
@@ -29,15 +29,15 @@
     class="p-4 w-full flex overflow-x-auto scroll-smooth"
     style="padding: 1rem 40%; scrollbar-width: none"
   >
-    @for (img of images(); track $index) {
+    @for (artwork of images(); track artwork.id ?? $index) {
     <img
       #imgElement
-      [src]="img"
+      [src]="artwork.image_url"
       alt=""
       class="w-24 shrink-0 cursor-pointer transition-all"
-      (click)="selectImg(img, $event)"
+      (click)="selectImg(artwork, $event)"
       [ngClass]="
-        img === selectedImg ? 'rounded-lg scale-120 z-20' : 'opacity-60'
+        artwork === selectedArtwork ? 'rounded-lg scale-120 z-20' : 'opacity-60'
       "
     />
     }

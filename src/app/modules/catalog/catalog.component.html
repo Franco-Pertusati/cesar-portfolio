@@ -1,7 +1,7 @@
 <div
-  class="flex flex-col gap-4 w-screen p-2 fixed top-0 left-0 h-screen pt-14 pb-16"
+  class="flex flex-col gap-4 w-screen p-2 fixed top-0 left-0 items-center h-screen pt-14 pb-16"
 >
-  <section class="grow flex flex-col">
+  <section class="grow flex flex-col max-w-3xl w-full px-2">
     <h2 class="text-xl">Elije el diseño</h2>
     <div class="bg-neutral grow rounded-2xl grid place-items-center">
       <div class="flex gap-3 flex-col items-center">
@@ -28,7 +28,7 @@
     }
   </section>
 
-  <section class="flex flex-col gap-1">
+  <section class="flex flex-col gap-1 max-w-3xl w-full px-2">
     <h2 class="text-xl">Tamaño de maceta</h2>
     <div class="bg-neutral rounded-2xl p-2 flex flex-col gap-3">
       <div>
@@ -44,7 +44,7 @@
     </div>
   </section>
 
-  <section class="flex flex-col gap-1">
+  <section class="flex flex-col gap-1 max-w-3xl w-full px-2">
     <h2 class="text-xl">Tu nombre</h2>
     <input
       type="text"
@@ -54,13 +54,15 @@
     />
   </section>
 
-  <button
-    class="rounded-xl text-xl flex p-4 px-8 items-center"
-    [ngClass]="isValidOrder() ? `bg-text text-dark` : `bg-neutral text-muted`"
-    [disabled]="!isValidOrder()"
-    (click)="createOrder()"
-  >
-    <span class="grow">Encargar por WhatsApp</span>
-    <i class="material-symbols-rounded text-xl">arrow_forward</i>
-  </button>
+  <div class="w-full self-center flex max-w-3xl px-2 justify-center">
+    <button
+      class="rounded-xl text-xl flex p-4 px-8 items-center max-w-3xl w-full"
+      [ngClass]="isValidOrder() ? `bg-text text-dark` : `bg-neutral text-muted`"
+      [disabled]="!isValidOrder()"
+      (click)="createOrder()"
+    >
+      <span class="grow">Encargar por WhatsApp</span>
+      <i class="material-symbols-rounded text-xl">arrow_forward</i>
+    </button>
+  </div>
 </div>
