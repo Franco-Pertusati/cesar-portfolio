@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { DialogService } from '../../core/services/dialog.service';
+import { ConsultDialogComponent } from '../../shared/components/consult-dialog/consult-dialog.component';
 
 interface ArtworkItem {
   file: File;
@@ -24,12 +26,17 @@ interface ArtworkItem {
 export class AdminComponent {
   private supabase = inject(SupabaseService);
   private router = inject(Router);
+  dialog = inject(DialogService)
 
   artworkQueue: ArtworkItem[] = [];
   isDragging = false;
   isUploadingAll = false;
   errorMessage = '';
   successMessage = '';
+
+  openCatalog() {
+    this.dialog.openDialog(ConsultDialogComponent)
+  }
 
   // --- Drag & Drop Events ---
   onDragOver(event: DragEvent) {
@@ -81,26 +88,24 @@ export class AdminComponent {
       img.onload = () => {
         URL.revokeObjectURL(url);
 
-        // Limitar dimensiones máximas a 1200px en el lado más largo
-        let width = img.width;
-        let height = img.height;
-        const maxSize = 1200;
+        const targetSize = 800;
 
-        if (width > maxSize || height > maxSize) {
-          if (width > height) {
-            height = Math.round((height * maxSize) / width);
-            width = maxSize;
-          } else {
-            width = Math.round((width * maxSize) / height);
-            height = maxSize;
-          }
-        }
+        // Calcular el recorte centrado (crop al centro, relación 1:1)
+        const size = Math.min(img.width, img.height);
+        const offsetX = (img.width - size) / 2;
+        const offsetY = (img.height - size) / 2;
 
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = targetSize;
+        canvas.height = targetSize;
         const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, width, height);
+
+        // drawImage con recorte: toma el cuadrado central y lo escala a 800x800
+        ctx?.drawImage(
+          img,
+          offsetX, offsetY, size, size, // Origen: recorte centrado
+          0, 0, targetSize, targetSize   // Destino: canvas 800x800
+        );
 
         canvas.toBlob(
           (blob) => {
@@ -111,7 +116,7 @@ export class AdminComponent {
             resolve(newFile);
           },
           'image/webp',
-          0.82 // Calidad del 82% - buen balance tamaño/calidad
+          0.82
         );
       };
       img.onerror = () => reject(new Error('Error al cargar imagen'));

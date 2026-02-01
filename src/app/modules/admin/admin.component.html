@@ -7,12 +7,20 @@
           Panel de Administración
         </h1>
       </div>
-      <button
-        (click)="logout()"
-        class="px-6 py-2 border border-border hover:bg-neutral hover:text-white transition-colors text-sm tracking-wide"
-      >
-        Cerrar sesión
-      </button>
+      <div class="flex gap-2">
+        <button
+          (click)="logout()"
+          class="px-6 py-2 border border-border hover:bg-neutral hover:text-white transition-colors text-sm tracking-wide"
+        >
+          Cerrar sesión
+        </button>
+        <button
+          (click)="openCatalog()"
+          class="px-6 py-2 border border-border hover:bg-neutral hover:text-white transition-colors text-sm tracking-wide"
+        >
+          Consultar catalogo
+        </button>
+      </div>
     </div>
 
     <!-- Mensajes -->
@@ -38,7 +46,7 @@
       (click)="fileInput.click()"
     >
       <div class="w-full grid place-items-center pt-16">
-        <i class="material-symbols-rounded" style="font-size: 56px;">upload</i>
+        <i class="material-symbols-rounded" style="font-size: 56px">upload</i>
       </div>
       <div class="py-16 px-6 text-center">
         <p class="text-lg font-light mb-1">
@@ -103,7 +111,7 @@
                     (click)="removeItem($index)"
                     class="text-sm opacity-50 hover:opacity-100"
                   >
-                    ✕
+                    <i class="material-symbols-rounded">close</i>
                   </button>
                 </div>
               }

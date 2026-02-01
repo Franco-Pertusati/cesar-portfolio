@@ -9,6 +9,7 @@ import { Artwork } from '../../../core/services/supabase.service';
 })
 export class GaleryComponent {
   artworks = input.required<Artwork[]>();
+  title = input<string | null>();
 
   carouselActive = false;
   selectedImageIndex = 0;
